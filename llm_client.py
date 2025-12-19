@@ -1,17 +1,17 @@
-import os
+import streamlit as st
 from openai import OpenAI
-from dotenv import load_dotenv
 
-load_dotenv()
-
+# Load values from Streamlit secrets
 client = OpenAI(
-    base_url=os.getenv("OPENROUTER_BASE_URL"),
-    api_key=os.getenv("OPENROUTER_API_KEY"),
+    base_url=st.secrets["OPENROUTER_BASE_URL"],
+    api_key=st.secrets["OPENROUTER_API_KEY"],
 )
+
+MODEL_NAME = st.secrets.get("MODEL_NAME", "google/gemini-3-flash-preview")  # default if not set
 
 def generate_architecture(prompt):
     response = client.chat.completions.create(
-        model=os.getenv("MODEL_NAME"),
+        model=MODEL_NAME,
         messages=[
             {"role": "user", "content": prompt}
         ],
